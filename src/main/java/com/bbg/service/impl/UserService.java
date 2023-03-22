@@ -28,7 +28,16 @@ public class UserService implements IUserService {
 //    }
     @Override
     public UserDTO save(UserDTO userDTO) {
-        UserEntity userEntity = userConverter.toEntity(userDTO);
+        UserEntity userEntity = new UserEntity();
+        if (userDTO.getId() == 0) {
+            userEntity = userConverter.toEntity(userDTO);
+        } else {
+            userEntity = userRepository.getById(userDTO.getId());
+            UserDTO oldInfomation = userConverter.toDTO(userEntity);
+            oldInfomation.setAge(userDTO.getAge());
+            oldInfomation.setName(userDTO.getName());
+            userEntity = userConverter.toEntity(oldInfomation);
+        }
         userEntity = userRepository.save(userEntity);
         return userConverter.toDTO(userEntity);
     }
@@ -69,5 +78,16 @@ public class UserService implements IUserService {
         UserEntity userEntity =  userRepository.getById(id);
         UserDTO userDTO = userConverter.toDTO(userEntity);
         return userDTO;
+    }
+
+    @Override
+    public boolean deleteUser(int id) {
+        boolean isExist = userRepository.existsById(id);
+        System.out.println(isExist);
+        if (isExist == true) {
+            userRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 }

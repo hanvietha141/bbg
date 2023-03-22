@@ -9,4 +9,5 @@ public interface IUserService {
     ArrayList<UserDTO> getUser();
     ArrayList<UserDTO> getUser(String oderDirection);
     UserDTO getUserById(int id);
+    boolean deleteUser(int id);
 }

@@ -19,14 +19,23 @@ public class UserAPI {
     }
 
     @GetMapping(value = {"/user"})
-    public ArrayList<UserDTO> getUser(@RequestParam String oderDirection) {
-        System.out.println(oderDirection);
+    public ArrayList<UserDTO> getUser(@RequestParam(required = false, name="order_direction") String oderDirection) {
         return userService.getUser(oderDirection);
     }
 
     @GetMapping(value = "/user/{id}")
     public UserDTO getUserById(@PathVariable int id) {
         return userService.getUserById(id);
+    }
+
+    @PutMapping(value="/user")
+    public UserDTO updateUser(@RequestBody UserDTO model) {
+        return userService.save(model);
+    }
+
+    @DeleteMapping(value="user/{id}")
+    public boolean deleteUser(@PathVariable int id) {
+        return userService.deleteUser(id);
     }
 
 }
