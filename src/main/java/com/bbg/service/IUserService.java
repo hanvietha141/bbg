@@ -8,6 +8,6 @@ public interface IUserService {
     UserDTO save(UserDTO userDTO);
     ArrayList<UserDTO> getUser();
     ArrayList<UserDTO> getUser(String oderDirection);
-    UserDTO getUserById(int id);
+    Object getUserById(int id) throws Exception;
     boolean deleteUser(int id);
 }

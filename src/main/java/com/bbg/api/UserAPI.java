@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 @CrossOrigin
 @RestController
@@ -24,8 +26,13 @@ public class UserAPI {
     }
 
     @GetMapping(value = "/user/{id}")
-    public UserDTO getUserById(@PathVariable int id) {
-        return userService.getUserById(id);
+    public Object getUserById(@PathVariable int id) {
+        Map<String, Object> res = new HashMap<>();
+        try{
+            return res.put("data", userService.getUserById(id));
+        } catch (Exception ex) {
+            return res.put("errorMessage", ex.getMessage());
+        }
     }
 
     @PutMapping(value="/user")

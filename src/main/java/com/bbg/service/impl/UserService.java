@@ -18,7 +18,7 @@ public class UserService implements IUserService {
     @Autowired
     private UserConverter userConverter;
 
-//    @PostConstruct
+    //    @PostConstruct
 //    public void init() {
 //        UserDTO userDTO = new UserDTO();
 //        userDTO.setAge(1);
@@ -54,7 +54,7 @@ public class UserService implements IUserService {
         return userDTOList;
     }
 
-    Comparator<UserDTO> compareByName = (UserDTO o1, UserDTO o2) -> o1.getName().compareTo( o2.getName() );
+    Comparator<UserDTO> compareByName = (UserDTO o1, UserDTO o2) -> o1.getName().compareTo(o2.getName());
 
     @Override
     public ArrayList<UserDTO> getUser(String oderDirection) {
@@ -73,11 +73,22 @@ public class UserService implements IUserService {
         return userDTOList;
     }
 
+//    @Override
+//    public UserDTO getUserById(int id) {
+//        UserEntity userEntity =  userRepository.getById(id);
+//        UserDTO userDTO = userConverter.toDTO(userEntity);
+//        return userDTO;
+//    }
+
     @Override
-    public UserDTO getUserById(int id) {
-        UserEntity userEntity =  userRepository.getById(id);
-        UserDTO userDTO = userConverter.toDTO(userEntity);
-        return userDTO;
+    public Object getUserById(int id) throws Exception {
+        UserEntity userEntity = userRepository.findById(id).orElse(null);
+        if (userEntity != null) {
+            UserDTO userDTO = userConverter.toDTO(userEntity);
+            return userDTO;
+        } else {
+            throw new Exception("Not found");
+        }
     }
 
     @Override
