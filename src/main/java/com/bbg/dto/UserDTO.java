@@ -1,9 +1,14 @@
 package com.bbg.dto;
 
+import com.bbg.entity.UserEntity;
+
+import java.util.ArrayList;
+
 public class UserDTO {
     private int id;
     private String name;
     private int age;
+    private ArrayList<Integer> following;
 
     public int getId() {
         return id;
@@ -27,5 +32,13 @@ public class UserDTO {
 
     public void setAge(int age) {
         this.age = age;
+    }
+
+    public ArrayList<Integer> getFollowing() {
+        return following;
+    }
+
+    public void setFollowing(ArrayList<Integer> following) {
+        this.following = following;
     }
 }

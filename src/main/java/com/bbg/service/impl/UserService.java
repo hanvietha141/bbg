@@ -4,7 +4,7 @@ import com.bbg.converter.UserConverter;
 import com.bbg.dto.UserDTO;
 import com.bbg.entity.UserEntity;
 import com.bbg.exception.ApiRequestExeption;
-import com.bbg.helper.StringHelper;
+import com.bbg.helper.ValidationHelper;
 import com.bbg.repository.UserRepository;
 import com.bbg.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,13 +20,13 @@ public class UserService implements IUserService {
     @Autowired
     private UserConverter userConverter;
     @Autowired
-    private StringHelper stringHelper;
+    private ValidationHelper validationHelper;
     @Override
     public Object save(UserDTO userDTO) {
         String[] strArray = new String[] {"f", "r", "u", "i", "t"};
-        Boolean iSValidated = stringHelper.haveCharacters(strArray, 3, userDTO.getName());
+        Boolean iSValidated = validationHelper.haveCharacters(strArray, 3, userDTO.getName());
+        UserEntity userEntity = new UserEntity();
         if (iSValidated) {
-            UserEntity userEntity = new UserEntity();
             if (userDTO.getId() == 0) {
                 userEntity = userConverter.toEntity(userDTO);
             } else {
@@ -37,10 +37,14 @@ public class UserService implements IUserService {
                 userEntity = userConverter.toEntity(oldInfomation);
             }
             userEntity = userRepository.save(userEntity);
-            return userConverter.toDTO(userEntity);
         } else {
             throw new ApiRequestExeption("Invalid name");
         }
+
+        if (!validationHelper.minMaxValue(userDTO.getAge())) {
+            throw new ApiRequestExeption("Age must be less then 22 and greater than 20!");
+        }
+        return userConverter.toDTO(userEntity);
     }
 
     @Override

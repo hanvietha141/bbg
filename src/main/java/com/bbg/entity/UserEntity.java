@@ -1,10 +1,16 @@
 package com.bbg.entity;
 
 
+import com.bbg.dto.TalentDTO;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name="user")
@@ -13,12 +19,17 @@ public class UserEntity {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private int id;
 
-    @Column()
+    @Column
     private String name;
     @Column
-    @Min(value=20, message = "Age must be greater than 20 or less then 22")
-    @Max(value=22, message = "Age must be greater than 20 or less then 22")
     private int age;
+
+    @ManyToMany()
+    @JoinTable(name = "talent_user",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "talent_id")
+    )
+    private List<TalentEntity> following;
 
     public int getId() {
         return id;
@@ -42,5 +53,13 @@ public class UserEntity {
 
     public void setAge(int age) {
         this.age = age;
+    }
+
+    public List<TalentEntity> getFollowing() {
+        return following;
+    }
+
+    public void setFollowing(List<TalentEntity> following) {
+        this.following = following;
     }
 }
