@@ -1,11 +1,11 @@
 package com.bbg.api;
 
 import com.bbg.dto.UserDTO;
+import com.bbg.exception.ApiRequestExeption;
 import com.bbg.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,31 +16,48 @@ public class UserAPI {
     private IUserService userService;
 
     @PostMapping(value = "/user")
-    public UserDTO createUser(@RequestBody UserDTO model) {
-        return userService.save(model);
+    public Object createUser(@RequestBody UserDTO model) {
+        Map<String, Object> res = new HashMap<>();
+        try {
+            res.put("data", userService.save(model));
+            return res;
+
+        } catch (Exception ex) {
+            res.put("error", ex.getMessage());
+            return res;
+        }
     }
 
     @GetMapping(value = {"/user"})
-    public ArrayList<UserDTO> getUser(@RequestParam(required = false, name="order_direction") String oderDirection) {
+    public Object getUser(@RequestParam(required = false, name = "order_direction") String oderDirection) throws ApiRequestExeption {
         return userService.getUser(oderDirection);
+//        throw new ApiRequestExeption("Invalid name");
     }
 
     @GetMapping(value = "/user/{id}")
     public Object getUserById(@PathVariable int id) {
         Map<String, Object> res = new HashMap<>();
-        try{
-            return res.put("data", userService.getUserById(id));
+        try {
+            res.put("data", userService.getUserById(id));
+            return res;
         } catch (Exception ex) {
-            return res.put("errorMessage", ex.getMessage());
+            res.put("errorMessage", ex.getMessage());
+            return res;
         }
     }
 
-    @PutMapping(value="/user")
-    public UserDTO updateUser(@RequestBody UserDTO model) {
-        return userService.save(model);
+    @PutMapping(value = "/user")
+    public Object updateUser(@RequestBody UserDTO model) {
+        Map<String, Object> res = new HashMap<>();
+        try {
+            res.put("data", userService.save(model));
+            return res;
+        } catch (Exception ex) {
+            throw new ApiRequestExeption(ex.getMessage());
+        }
     }
 
-    @DeleteMapping(value="user/{id}")
+    @DeleteMapping(value = "user/{id}")
     public boolean deleteUser(@PathVariable int id) {
         return userService.deleteUser(id);
     }

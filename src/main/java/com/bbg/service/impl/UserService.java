@@ -3,6 +3,8 @@ package com.bbg.service.impl;
 import com.bbg.converter.UserConverter;
 import com.bbg.dto.UserDTO;
 import com.bbg.entity.UserEntity;
+import com.bbg.exception.ApiRequestExeption;
+import com.bbg.helper.StringHelper;
 import com.bbg.repository.UserRepository;
 import com.bbg.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,29 +19,28 @@ public class UserService implements IUserService {
 
     @Autowired
     private UserConverter userConverter;
-
-    //    @PostConstruct
-//    public void init() {
-//        UserDTO userDTO = new UserDTO();
-//        userDTO.setAge(1);
-//        userDTO.setName("a");
-//        UserEntity userEntity = userConverter.toEntity(userDTO);
-//        userRepository.save(userEntity);
-//    }
+    @Autowired
+    private StringHelper stringHelper;
     @Override
-    public UserDTO save(UserDTO userDTO) {
-        UserEntity userEntity = new UserEntity();
-        if (userDTO.getId() == 0) {
-            userEntity = userConverter.toEntity(userDTO);
+    public Object save(UserDTO userDTO) {
+        String[] strArray = new String[] {"f", "r", "u", "i", "t"};
+        Boolean iSValidated = stringHelper.haveCharacters(strArray, 3, userDTO.getName());
+        if (iSValidated) {
+            UserEntity userEntity = new UserEntity();
+            if (userDTO.getId() == 0) {
+                userEntity = userConverter.toEntity(userDTO);
+            } else {
+                userEntity = userRepository.getById(userDTO.getId());
+                UserDTO oldInfomation = userConverter.toDTO(userEntity);
+                oldInfomation.setAge(userDTO.getAge());
+                oldInfomation.setName(userDTO.getName());
+                userEntity = userConverter.toEntity(oldInfomation);
+            }
+            userEntity = userRepository.save(userEntity);
+            return userConverter.toDTO(userEntity);
         } else {
-            userEntity = userRepository.getById(userDTO.getId());
-            UserDTO oldInfomation = userConverter.toDTO(userEntity);
-            oldInfomation.setAge(userDTO.getAge());
-            oldInfomation.setName(userDTO.getName());
-            userEntity = userConverter.toEntity(oldInfomation);
+            throw new ApiRequestExeption("Invalid name");
         }
-        userEntity = userRepository.save(userEntity);
-        return userConverter.toDTO(userEntity);
     }
 
     @Override
@@ -72,13 +73,6 @@ public class UserService implements IUserService {
         }
         return userDTOList;
     }
-
-//    @Override
-//    public UserDTO getUserById(int id) {
-//        UserEntity userEntity =  userRepository.getById(id);
-//        UserDTO userDTO = userConverter.toDTO(userEntity);
-//        return userDTO;
-//    }
 
     @Override
     public Object getUserById(int id) throws Exception {
