@@ -1,5 +1,6 @@
 package com.bbg.api;
 
+import com.bbg.Requestbody.RequestbodySetFollowing;
 import com.bbg.dto.UserDTO;
 import com.bbg.exception.ApiRequestExeption;
 import com.bbg.service.IUserService;
@@ -32,7 +33,6 @@ public class UserAPI {
     @GetMapping(value = {"/user"})
     public Object getUser(@RequestParam(required = false, name = "order_direction") String oderDirection) throws ApiRequestExeption {
         return userService.getUser(oderDirection);
-//        throw new ApiRequestExeption("Invalid name");
     }
 
     @GetMapping(value = "/user/{id}")
@@ -63,9 +63,9 @@ public class UserAPI {
         return userService.deleteUser(id);
     }
 
-    @PostMapping(value = "/folow")
-    public Object setUserFollow(int userId, List<Integer> talentIds) {
-        return userService.setUserFollow(userId, talentIds);
+    @PostMapping(value = "/follow")
+    public Object setUserFollowing(@RequestBody RequestbodySetFollowing model){
+        return userService.setUserFollowing(model);
     }
 
 }

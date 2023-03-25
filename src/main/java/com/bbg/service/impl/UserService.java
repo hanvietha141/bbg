@@ -1,10 +1,13 @@
 package com.bbg.service.impl;
 
+import com.bbg.Requestbody.RequestbodySetFollowing;
 import com.bbg.converter.UserConverter;
 import com.bbg.dto.UserDTO;
+import com.bbg.entity.TalentEntity;
 import com.bbg.entity.UserEntity;
 import com.bbg.exception.ApiRequestExeption;
 import com.bbg.helper.ValidationHelper;
+import com.bbg.repository.TalentRepository;
 import com.bbg.repository.UserRepository;
 import com.bbg.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,14 +19,16 @@ import java.util.*;
 public class UserService implements IUserService {
     @Autowired
     private UserRepository userRepository;
-
+    @Autowired
+    private TalentRepository talentRepository;
     @Autowired
     private UserConverter userConverter;
     @Autowired
     private ValidationHelper validationHelper;
+
     @Override
     public Object save(UserDTO userDTO) {
-        String[] strArray = new String[] {"f", "r", "u", "i", "t"};
+        String[] strArray = new String[]{"f", "r", "u", "i", "t"};
         Boolean iSValidated = validationHelper.haveCharacters(strArray, 3, userDTO.getName());
         UserEntity userEntity = new UserEntity();
         if (iSValidated) {
@@ -46,6 +51,7 @@ public class UserService implements IUserService {
         }
         return userConverter.toDTO(userEntity);
     }
+
 
     @Override
     public ArrayList<UserDTO> getUser() {
@@ -100,8 +106,24 @@ public class UserService implements IUserService {
         return false;
     }
 
+
     @Override
-    public Object setUserFollow(int userId, List<Integer> talentIds) {
-        return null;
+    public Object setUserFollowing(RequestbodySetFollowing model) {
+        int userId = model.getUserId();
+        List<Integer> talentIds = model.getTalentIds();
+        UserEntity userEntity = userRepository.findById(userId).orElse(null);
+        List<TalentEntity> prevListFollowing = userEntity.getFollowing();
+        ArrayList<TalentEntity> newListFollwing = new ArrayList<>();
+        for(TalentEntity prevItemFollowing : prevListFollowing) {
+            newListFollwing.add(prevItemFollowing);
+        }
+        for (int talentId : talentIds) {
+            TalentEntity talentEntity = talentRepository.findById(talentId).orElse(null);
+            newListFollwing.add(talentEntity);
+        }
+        userEntity.setFollowing(newListFollwing);
+        UserDTO userDTO = userConverter.toDTO(userEntity);
+        userEntity = userRepository.save(userEntity);
+        return userDTO;
     }
 }

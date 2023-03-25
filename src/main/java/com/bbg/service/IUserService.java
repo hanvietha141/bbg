@@ -1,5 +1,6 @@
 package com.bbg.service;
 
+import com.bbg.Requestbody.RequestbodySetFollowing;
 import com.bbg.dto.UserDTO;
 
 import java.util.ArrayList;
@@ -12,5 +13,5 @@ public interface IUserService {
     Object getUserById(int id) throws Exception;
     boolean deleteUser(int id);
 
-    Object setUserFollow(int userId, List<Integer> talentIds) throws Exception;
+    Object setUserFollowing(RequestbodySetFollowing model);
 }
