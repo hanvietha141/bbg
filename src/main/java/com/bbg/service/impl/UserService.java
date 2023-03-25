@@ -99,4 +99,9 @@ public class UserService implements IUserService {
         }
         return false;
     }
+
+    @Override
+    public Object setUserFollow(int userId, List<Integer> talentIds) {
+        return null;
+    }
 }

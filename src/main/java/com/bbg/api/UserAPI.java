@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @CrossOrigin
@@ -60,6 +61,11 @@ public class UserAPI {
     @DeleteMapping(value = "user/{id}")
     public boolean deleteUser(@PathVariable int id) {
         return userService.deleteUser(id);
+    }
+
+    @PostMapping(value = "/folow")
+    public Object setUserFollow(int userId, List<Integer> talentIds) {
+        return userService.setUserFollow(userId, talentIds);
     }
 
 }

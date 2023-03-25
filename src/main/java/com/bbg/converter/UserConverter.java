@@ -1,8 +1,12 @@
 package com.bbg.converter;
 
 import com.bbg.dto.UserDTO;
+import com.bbg.entity.TalentEntity;
 import com.bbg.entity.UserEntity;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class UserConverter {
@@ -19,6 +23,12 @@ public class UserConverter {
         userDTO.setAge(entity.getAge());
         userDTO.setId(entity.getId());
         userDTO.setName(entity.getName());
+        List<TalentEntity> listFollowing = entity.getFollowing();
+        ArrayList<Integer> listIdFollowing = new ArrayList<>();
+        for(TalentEntity following : listFollowing) {
+            listIdFollowing.add(following.getId());
+        }
+        userDTO.setFollowing(listIdFollowing);
         return userDTO;
     }
 }
