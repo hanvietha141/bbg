@@ -11,6 +11,9 @@ import com.bbg.repository.TalentRepository;
 import com.bbg.repository.UserRepository;
 import com.bbg.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -69,7 +72,10 @@ public class UserService implements IUserService {
 
     @Override
     public ArrayList<UserDTO> getUser(String oderDirection) {
-        ArrayList<UserEntity> userEntities = (ArrayList<UserEntity>) userRepository.findAll();
+//        ArrayList<UserEntity> userEntities = (ArrayList<UserEntity>) userRepository.findAll();
+//        Page<UserEntity> userEntities =  userRepository.findAll(PageRequest.of(1, 2));
+//        ArrayList<UserEntity> userEntities = (ArrayList<UserEntity>) userRepository.findAll(Sort.by(Sort.Direction.ASC, "name"));
+        Page<UserEntity> userEntities = userRepository.findAll(PageRequest.of(0, 2).withSort(Sort.by(Sort.Direction.DESC, "name")));
         ArrayList<UserDTO> userDTOList = new ArrayList<UserDTO>();
         for (UserEntity userEntity : userEntities) {
             UserDTO userDTO = userConverter.toDTO(userEntity);
