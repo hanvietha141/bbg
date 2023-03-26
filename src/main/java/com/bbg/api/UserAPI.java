@@ -64,8 +64,23 @@ public class UserAPI {
     }
 
     @PostMapping(value = "/follow")
-    public Object setUserFollowing(@RequestBody RequestbodySetFollowing model){
-        return userService.setUserFollowing(model);
+    public Object setUserFollowing(@RequestBody RequestbodySetFollowing model) throws ApiRequestExeption{
+        try {
+            Object object = userService.setUserFollowing(model);
+            return object;
+        } catch(Exception ex) {
+            throw new ApiRequestExeption(ex.getMessage());
+        }
+    }
+
+    @PostMapping(value = "/un-follow")
+    public Object setUserUnFollow(@RequestBody RequestbodySetFollowing model) throws ApiRequestExeption{
+        try {
+            Object object = userService.setUserUnfollow(model);
+            return object;
+        } catch(Exception ex) {
+            throw new ApiRequestExeption(ex.getMessage());
+        }
     }
 
 }

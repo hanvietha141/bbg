@@ -108,10 +108,11 @@ public class UserService implements IUserService {
 
 
     @Override
-    public Object setUserFollowing(RequestbodySetFollowing model) {
+    public Object setUserFollowing(RequestbodySetFollowing model) throws Exception  {
         int userId = model.getUserId();
         List<Integer> talentIds = model.getTalentIds();
         UserEntity userEntity = userRepository.findById(userId).orElse(null);
+        UserDTO userDTO = userConverter.toDTO(userEntity);
         List<TalentEntity> prevListFollowing = userEntity.getFollowing();
         ArrayList<TalentEntity> newListFollwing = new ArrayList<>();
         for(TalentEntity prevItemFollowing : prevListFollowing) {
@@ -119,11 +120,46 @@ public class UserService implements IUserService {
         }
         for (int talentId : talentIds) {
             TalentEntity talentEntity = talentRepository.findById(talentId).orElse(null);
-            newListFollwing.add(talentEntity);
+            if (talentEntity != null) {
+//                System.out.println(userDTO.getFollowing());
+                if (userDTO.getFollowing().contains(talentId)) {
+                    throw new ApiRequestExeption("You were following " + talentEntity.getName());
+                }
+                newListFollwing.add(talentEntity);
+            } else {
+                throw new Exception("Talent doesn't exist");
+            }
         }
         userEntity.setFollowing(newListFollwing);
-        UserDTO userDTO = userConverter.toDTO(userEntity);
         userEntity = userRepository.save(userEntity);
+        userDTO = userConverter.toDTO(userEntity);
+        return userDTO;
+    }
+
+    public Object setUserUnfollow(RequestbodySetFollowing model) throws Exception {
+        int userId = model.getUserId();
+        List<Integer> talentIds = model.getTalentIds();
+        UserEntity userEntity = userRepository.findById(userId).orElse(null);
+        UserDTO userDTO = userConverter.toDTO(userEntity);
+        List<TalentEntity> prevListFollowing = userEntity.getFollowing();
+        ArrayList<TalentEntity> newListFollwing = new ArrayList<>();
+        for(TalentEntity prevItemFollowing : prevListFollowing) {
+            newListFollwing.add(prevItemFollowing);
+        }
+        for (Integer talentId : talentIds) {
+            TalentEntity talentEntity = talentRepository.findById(talentId).orElse(null);
+            if (talentEntity != null) {
+                if (!userDTO.getFollowing().contains(talentId)) {
+                    throw new Exception("You cannot unfollow " + talentEntity.getName());
+                }
+                newListFollwing.removeIf(talent -> talent.getId() == talentEntity.getId());
+            } else {
+                throw new Exception("Talent not found");
+            }
+        }
+        userEntity.setFollowing(newListFollwing);
+        userEntity = userRepository.save(userEntity);
+        userDTO = userConverter.toDTO(userEntity);
         return userDTO;
     }
 }

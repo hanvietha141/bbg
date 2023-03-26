@@ -13,5 +13,7 @@ public interface IUserService {
     Object getUserById(int id) throws Exception;
     boolean deleteUser(int id);
 
-    Object setUserFollowing(RequestbodySetFollowing model);
+    Object setUserFollowing(RequestbodySetFollowing model) throws Exception;
+
+    Object setUserUnfollow(RequestbodySetFollowing model) throws Exception;
 }
