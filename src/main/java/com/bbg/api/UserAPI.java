@@ -31,8 +31,9 @@ public class UserAPI {
     }
 
     @GetMapping(value = {"/user"})
-    public Object getUser(@RequestParam(required = false, name = "order_direction") String oderDirection) throws ApiRequestExeption {
-        return userService.getUser(oderDirection);
+    public Object getUser(@RequestParam(required = false, name = "order_direction") String oderDirection,
+                          @RequestParam int page, @RequestParam int limit) throws ApiRequestExeption {
+        return userService.getUser(oderDirection, page, limit);
     }
 
     @GetMapping(value = "/user/{id}")

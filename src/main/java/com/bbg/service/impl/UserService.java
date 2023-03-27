@@ -71,11 +71,11 @@ public class UserService implements IUserService {
     Comparator<UserDTO> compareByName = (UserDTO o1, UserDTO o2) -> o1.getName().compareTo(o2.getName());
 
     @Override
-    public ArrayList<UserDTO> getUser(String oderDirection) {
-//        ArrayList<UserEntity> userEntities = (ArrayList<UserEntity>) userRepository.findAll();
-//        Page<UserEntity> userEntities =  userRepository.findAll(PageRequest.of(1, 2));
-//        ArrayList<UserEntity> userEntities = (ArrayList<UserEntity>) userRepository.findAll(Sort.by(Sort.Direction.ASC, "name"));
-        Page<UserEntity> userEntities = userRepository.findAll(PageRequest.of(0, 2).withSort(Sort.by(Sort.Direction.DESC, "name")));
+    public ArrayList<UserDTO> getUser(String oderDirection, int page, int limit) {
+//        ArrayList<UserEntity> userEntities = (ArrayList<UserEntity>) userRepository.findByIdGreaterThan3(PageRequest.of(1, 2));
+//        Page<UserEntity> userEntities =  userRepository.findAll(PageRequest.of(page, limit));
+        ArrayList<UserEntity> userEntities = (ArrayList<UserEntity>) userRepository.findAll(Sort.by(Sort.Direction.ASC, "name"));
+//        Page<UserEntity> userEntities = userRepository.findAll(PageRequest.of(page, limit).withSort(Sort.by(oderDirection == "DESC" ? Sort.Direction.DESC : Sort.Direction.ASC, "name")));
         ArrayList<UserDTO> userDTOList = new ArrayList<UserDTO>();
         for (UserEntity userEntity : userEntities) {
             UserDTO userDTO = userConverter.toDTO(userEntity);

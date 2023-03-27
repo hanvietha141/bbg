@@ -9,7 +9,7 @@ import java.util.List;
 public interface IUserService {
     Object save(UserDTO userDTO) throws Exception;
     ArrayList<UserDTO> getUser();
-    ArrayList<UserDTO> getUser(String oderDirection);
+    ArrayList<UserDTO> getUser(String oderDirection, int page, int limit);
     Object getUserById(int id) throws Exception;
     boolean deleteUser(int id);
 
